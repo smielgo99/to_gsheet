@@ -6,17 +6,18 @@ import sys
 def extract_data(file_in):
 	tree = ET.parse(file_in)
 	root = tree.getroot()
+	US_list = []
+
 
 
 	for item in root.iter('item'):
+		title = item.find('title').text
+		link = item.find('link').text
 		status = item.find('status').text
-		issue_type = item.find('type').text
-		fixVersion = item.find('type').text
+		fixVersion = item.find('fixVersion').text
 		sprints=[]
 
-		print status
-		print issue_type
-		print fixVersion
+		
 		
 		customfields = item.find('customfields')
 		for customfield in customfields:
@@ -25,22 +26,42 @@ def extract_data(file_in):
 				for child in customfieldvalues:
 					sprints.append(child.text)
 		
-		print sprints
+		# print title
+		# print link
+		# print status
+		# print fixVersion
+		# print sprints
+		# print format_to_gdocs(link, title)
 
-
-
-# def print_item(item):
-
-# 		status = item.find('status').text
-# 		issue_type = item.find('type').text
-
-# 		title = item.find('title').text
-# 		link = item.find('link').text
 		
-# 		print title
-# 		print link
-# 		print status
-# 		print issue_type
+		
+		for sprint in sprints:
+			print sprint
+			us = UserStory(format_to_gdocs(link, title), status, sprint, fixVersion)
+			us.getUS()
+			print "---"
+			US_list.append(us)
+
+		
+
+def format_to_gdocs(link, title):
+	return("=HYPERLINK(\" " + link + ";\" "+ title + "\")")
+	
+
+class UserStory:
+
+	def __init__(self, hyperlink, status, sprint, fixVersion):
+		self.hyperlink = hyperlink
+		self.status = status
+		self.sprint = sprint
+		self.fixVersion = fixVersion
+
+	def getUS(self):
+		print self.hyperlink
+		print self.status
+		print self.sprint
+		print self.fixVersion
+
 
 # def create_release_notes(file_in, file_out, platform, version):
 # 	tree = ET.parse(file_in)
