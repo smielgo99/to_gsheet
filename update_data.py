@@ -16,6 +16,10 @@ def get_data():
 
 def update_data(worksheet):
 	# Select a range
+	print "update_data"
+
+	worksheet.update_cell(1, 2, 'Bingo!')
+	
 	cell_list = worksheet.range('A2:G2')
 	cell_values = [1,2,3,4,5,6,7]
 
